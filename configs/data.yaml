@@ -1,0 +1,42 @@
+# Dataset configuration for YOLOv8 Crop Gap Detection
+# This configuration is for training YOLOv8 on UAV imagery for crop gap mapping
+
+# Dataset paths (relative to this config file or absolute)
+path: ../data  # Dataset root directory
+train: processed/train/images  # Training images directory
+val: processed/val/images      # Validation images directory
+test: processed/test/images    # Test images directory (optional)
+
+# Number of classes
+nc: 2  # Number of classes (crop, gap)
+
+# Class names
+names:
+  0: crop
+  1: gap
+
+# Image settings (optional overrides)
+# imgsz: 640  # Default image size for training
+# rect: False  # Rectangular training
+# single_cls: False  # Train as single-class dataset
+
+# Augmentation settings (optional)
+# hsv_h: 0.015  # Image HSV-Hue augmentation (fraction)
+# hsv_s: 0.7    # Image HSV-Saturation augmentation (fraction)
+# hsv_v: 0.4    # Image HSV-Value augmentation (fraction)
+# degrees: 0.0  # Image rotation (+/- deg)
+# translate: 0.1  # Image translation (+/- fraction)
+# scale: 0.5    # Image scale (+/- gain)
+# shear: 0.0    # Image shear (+/- deg)
+# perspective: 0.0  # Image perspective (+/- fraction)
+# flipud: 0.0   # Image flip up-down (probability)
+# fliplr: 0.5   # Image flip left-right (probability)
+# mosaic: 1.0   # Image mosaic (probability)
+# mixup: 0.0    # Image mixup (probability)
+
+# Notes:
+# - Ensure your dataset follows YOLO format:
+#   - Images in images/ subdirectory
+#   - Labels in labels/ subdirectory (same name as image, .txt extension)
+# - Label format: class x_center y_center width height (normalized 0-1)
+# - For geospatial data, consider using UTM coordinates and convert to image coordinates
