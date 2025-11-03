@@ -109,10 +109,16 @@ def pixel_to_geo_coords(pixel_x, pixel_y, transform):
     Returns:
         tuple: (geo_x, geo_y)
     """
-    geo_x = transform[2] + pixel_x * transform[0] + pixel_y * transform[1]
-    geo_y = transform[5] + pixel_x * transform[3] + pixel_y * transform[4]
-    
-    return geo_x, geo_y
+    if GEOSPATIAL_AVAILABLE:
+        # Use rasterio's built-in method for better reliability
+        import rasterio.transform
+        geo_x, geo_y = rasterio.transform.xy(transform, pixel_y, pixel_x)
+        return geo_x, geo_y
+    else:
+        # Fallback to manual calculation
+        geo_x = transform[2] + pixel_x * transform[0] + pixel_y * transform[1]
+        geo_y = transform[5] + pixel_x * transform[3] + pixel_y * transform[4]
+        return geo_x, geo_y
 
 
 def geo_to_pixel_coords(geo_x, geo_y, transform):
@@ -127,12 +133,17 @@ def geo_to_pixel_coords(geo_x, geo_y, transform):
     Returns:
         tuple: (pixel_x, pixel_y)
     """
-    det = transform[0] * transform[4] - transform[1] * transform[3]
-    
-    pixel_x = (transform[4] * (geo_x - transform[2]) - transform[1] * (geo_y - transform[5])) / det
-    pixel_y = (-transform[3] * (geo_x - transform[2]) + transform[0] * (geo_y - transform[5])) / det
-    
-    return int(pixel_x), int(pixel_y)
+    if GEOSPATIAL_AVAILABLE:
+        # Use rasterio's built-in inverse transformation for better reliability
+        import rasterio.transform
+        pixel_y, pixel_x = rasterio.transform.rowcol(transform, geo_x, geo_y)
+        return int(pixel_x), int(pixel_y)
+    else:
+        # Fallback to manual calculation
+        det = transform[0] * transform[4] - transform[1] * transform[3]
+        pixel_x = (transform[4] * (geo_x - transform[2]) - transform[1] * (geo_y - transform[5])) / det
+        pixel_y = (-transform[3] * (geo_x - transform[2]) + transform[0] * (geo_y - transform[5])) / det
+        return int(pixel_x), int(pixel_y)
 
 
 def create_bbox_from_coords(coords, transform, img_width, img_height):

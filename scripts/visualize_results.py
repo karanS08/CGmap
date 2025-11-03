@@ -113,7 +113,11 @@ def visualize_predictions(image_dir, label_dir, class_names, num_samples=5, save
     image_path = Path(image_dir)
     label_path = Path(label_dir)
     
-    image_files = sorted(list(image_path.glob('*.[jp][pn][g]')))[:num_samples]
+    # Get all image files with various extensions
+    image_files = []
+    for pattern in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
+        image_files.extend(image_path.glob(pattern))
+    image_files = sorted(image_files)[:num_samples]
     
     if not image_files:
         print(f"No images found in {image_dir}")

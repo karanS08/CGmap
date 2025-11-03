@@ -53,7 +53,11 @@ def split_dataset(image_dir, label_dir, output_dir,
     np.random.seed(seed)
     
     # Get all image files
-    image_files = sorted(Path(image_dir).glob('*.[jp][pn][g]'))
+    image_dir_path = Path(image_dir)
+    image_files = []
+    for pattern in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
+        image_files.extend(image_dir_path.glob(pattern))
+    image_files = sorted(image_files)
     
     if not image_files:
         raise ValueError(f"No images found in {image_dir}")
@@ -164,7 +168,10 @@ def validate_dataset(dataset_dir, num_classes=2):
             print(f"Warning: {split} images directory not found")
             continue
         
-        images = list(image_dir.glob('*.[jp][pn][g]'))
+        images = []
+        for pattern in ['*.jpg', '*.jpeg', '*.png', '*.JPG', '*.JPEG', '*.PNG']:
+            images.extend(image_dir.glob(pattern))
+        images = sorted(images)
         labels = list(label_dir.glob('*.txt')) if label_dir.exists() else []
         
         print(f"\n{split.upper()} set:")
